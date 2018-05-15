@@ -4,11 +4,43 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="styles/style.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
 
-        <div id="header-container" ui-view="header"></div>
+        <ng-controller ng-controller="cityGovCtrl as $ctrl">
+
+            <div class="main-container">
+
+                <main>
+
+                    <header>
+                        <h3>City Government App</h3>
+                    </header>
+
+                    <!-- <h5 class="label">
+                        Yearly Budget
+                    </h5>
+
+                    <input type="text" year-processor
+                           ng-model="$ctrl.yearlyBudget"> -->
+
+                    <h5 class="label">
+                        Flat Tax
+                    </h5>
+
+                    <input type="text" cash-format
+                           ng-model="$ctrl.flatTax">
+
+                </main>
+
+            </div>
+
+            <button class="checker" ng-click="$ctrl.check()">
+                Check
+            </button>
+
+        </ng-controller>
 
         <script src='bundle.js'></script>
 
