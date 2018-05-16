@@ -14,12 +14,13 @@ app.controller("cityGovCtrl", function() {
             return arr
         }())
     }
+    // domain-friendly formatted data
 
     this.flatTax = 5
 
     this.check = function() {
         console.log("flat tax: " + this.flatTax)
-        // console.log("yearly budget: " + this.yearlyBudget+)
+        console.log("yearly budget - month 1: " + this.yearlyBudget.monthsData[0])
     }
 
 })
@@ -44,7 +45,12 @@ app.directive("cashFormat", function() {
                 var bareNum = parseInt(viewValue.replace(/[^0-9]/g, ""))
 
                 var newViewValue = "$" + bareNum
-                elem.val(newViewValue)
+                if( newViewValue !== viewValue ) {
+                    ngModelCtrl.$setViewValue(
+                        newViewValue
+                    )
+                    ngModelCtrl.$render()
+                }
 
                 return bareNum
             })
@@ -57,11 +63,15 @@ app.directive("yearProcessor", function() {
     return {
         restrict: "A",
         require: "ngModel",
-        // priority 0 (default)
+        priority: 1,
+
+        // compile and pre-link functions are called in priority order
+
+        // called in reverse priority order..
         link: function($scope, elem, attrs, ngModelCtrl) {
 
             ngModelCtrl.$formatters.push(function(modelValue) {
-                return "$" + modelValue.total
+                return modelValue.total
             })
 
             ngModelCtrl.$render = function() {
@@ -70,19 +80,14 @@ app.directive("yearProcessor", function() {
 
             ngModelCtrl.$parsers.push(function(viewValue) {
 
-                var bareNum = parseInt(viewValue.replace(/[^0-9]/g, ""))
-
-                var newViewValue = "$" + bareNum
-                elem.val(newViewValue)
-
                 var newMonthsData = []
-                var monthlyAmount = bareNum / 12
+                var monthlyAmount = viewValue / 12
                 for(var i=0; i < 12; ++i) {
                     newMonthsData.push(monthlyAmount)
                 }
 
                 return {
-                    total: bareNum,
+                    total: viewValue,
                     monthsData: newMonthsData
                 }
             })
